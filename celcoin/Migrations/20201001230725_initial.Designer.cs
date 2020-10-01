@@ -10,7 +10,7 @@ using celcoin.Data;
 namespace celcoin.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20201001184958_initial")]
+    [Migration("20201001230725_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,20 @@ namespace celcoin.Migrations
                     b.HasIndex("TaxaId");
 
                     b.ToTable("MeiosPagamento");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nome = "Débito",
+                            TaxaId = 3
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nome = "Crédito",
+                            TaxaId = 4
+                        });
                 });
 
             modelBuilder.Entity("celcoin.Models.Taxa", b =>
@@ -61,6 +75,32 @@ namespace celcoin.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Taxas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nome = "taxa_debito",
+                            Valor = 2.3m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nome = "taxa_credito",
+                            Valor = 4.55m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nome = "taxa_parcela_credito",
+                            Valor = 1.6m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Nome = "taxa_parcela_debito",
+                            Valor = 0m
+                        });
                 });
 
             modelBuilder.Entity("celcoin.Models.TipoVenda", b =>
@@ -70,7 +110,7 @@ namespace celcoin.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("nome")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("character varying(200)")
                         .HasMaxLength(200);
@@ -78,6 +118,23 @@ namespace celcoin.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TiposVenda");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nome = "CUSTO_VENDEDOR"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nome = "PARCELADO_CLIENTE"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nome = "CUSTO_CLIENTE"
+                        });
                 });
 
             modelBuilder.Entity("celcoin.Models.Venda", b =>
@@ -119,6 +176,30 @@ namespace celcoin.Migrations
                     b.HasIndex("VendedorId");
 
                     b.ToTable("Vendas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Data = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MeioPagamentoId = 1,
+                            NumParcelas = 1,
+                            Recebivel = 100m,
+                            TaxaParcelaId = 1,
+                            TipoVendaId = 1,
+                            VendedorId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Data = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MeioPagamentoId = 2,
+                            NumParcelas = 4,
+                            Recebivel = 100m,
+                            TaxaParcelaId = 3,
+                            TipoVendaId = 2,
+                            VendedorId = 1
+                        });
                 });
 
             modelBuilder.Entity("celcoin.Models.Vendedor", b =>
@@ -139,6 +220,14 @@ namespace celcoin.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Vendedores");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nome = "Marcos Vinícios de Oliveira",
+                            Saldo = 0.0
+                        });
                 });
 
             modelBuilder.Entity("celcoin.Models.MeioPagamento", b =>

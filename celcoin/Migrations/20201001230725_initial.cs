@@ -28,7 +28,7 @@ namespace celcoin.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    nome = table.Column<string>(maxLength: 200, nullable: false)
+                    Nome = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,6 +110,50 @@ namespace celcoin.Migrations
                         principalTable: "Vendedores",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Taxas",
+                columns: new[] { "Id", "Nome", "Valor" },
+                values: new object[,]
+                {
+                    { 1, "taxa_debito", 2.3m },
+                    { 2, "taxa_credito", 4.55m },
+                    { 3, "taxa_parcela_credito", 1.6m },
+                    { 4, "taxa_parcela_debito", 0m }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TiposVenda",
+                columns: new[] { "Id", "Nome" },
+                values: new object[,]
+                {
+                    { 1, "CUSTO_VENDEDOR" },
+                    { 2, "PARCELADO_CLIENTE" },
+                    { 3, "CUSTO_CLIENTE" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Vendedores",
+                columns: new[] { "Id", "Nome", "Saldo" },
+                values: new object[] { 1, "Marcos Vinícios de Oliveira", 0.0 });
+
+            migrationBuilder.InsertData(
+                table: "MeiosPagamento",
+                columns: new[] { "Id", "Nome", "TaxaId" },
+                values: new object[,]
+                {
+                    { 1, "Débito", 3 },
+                    { 2, "Crédito", 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Vendas",
+                columns: new[] { "Id", "Data", "MeioPagamentoId", "NumParcelas", "Recebivel", "TaxaParcelaId", "TipoVendaId", "VendedorId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 1, 100m, 1, 1, 1 },
+                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 4, 100m, 3, 2, 1 }
                 });
 
             migrationBuilder.CreateIndex(

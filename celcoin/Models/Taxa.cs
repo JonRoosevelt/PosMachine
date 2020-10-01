@@ -5,7 +5,7 @@ namespace celcoin.Models
     public class Taxa
     {   
         [Key]
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório.")]
         [MaxLength(200, ErrorMessage = "Este campo deve conter entre 2 e 200 caracteres")]

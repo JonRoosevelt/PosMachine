@@ -7,7 +7,7 @@ namespace celcoin.Models
     public class Venda
     {
         [Key]
-        public int Id { get; private set; }
+        public int Id { get; set; }
         [Required(ErrorMessage = "Este campo é obrigatório.")]
 
         public int VendedorId { get; set; }

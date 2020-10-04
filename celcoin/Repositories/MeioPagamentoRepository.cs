@@ -21,6 +21,11 @@ namespace celcoin.Repositories
             _context.MeiosPagamento.Add(meioPagamento);
             _context.SaveChanges();
         }
+        public void Update(MeioPagamento meioPagamento)
+        {
+            _context.MeiosPagamento.Update(meioPagamento);
+            _context.SaveChanges();
+        }
 
     }
 }

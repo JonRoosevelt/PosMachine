@@ -11,6 +11,9 @@ namespace celcoin.Controllers
     [Route("v1/meios-de-pagamento")]
     public class MeioPagamentoController : ControllerBase
     {
+        private async Task<bool> MeioPagamentoExistsAsync(int id, ApplicationContext context) =>
+            await context.MeiosPagamento.AnyAsync(e => e.Id == id);
+
         [HttpGet]
         [Route("")]
         public async Task<ActionResult<List<MeioPagamento>>> Get([FromServices] ApplicationContext context)
@@ -19,7 +22,7 @@ namespace celcoin.Controllers
                 .AsNoTracking()
                 .Include(x => x.Taxa)
                 .ToListAsync();
-            return meiosPagamento;
+            return Ok(meiosPagamento);
         }
 
         [HttpGet]
@@ -31,7 +34,7 @@ namespace celcoin.Controllers
                 .AsNoTracking()
                 .Include(x => x.Taxa)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            return meioPagamento;
+            return Ok(meioPagamento);
         }
 
         [HttpPost]
@@ -45,7 +48,7 @@ namespace celcoin.Controllers
             {
                 context.MeiosPagamento.Add(model);
                 await context.SaveChangesAsync();
-                return model;
+                return Created("", model);
             }
             else
             {
@@ -53,6 +56,57 @@ namespace celcoin.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("{id:int}")]
+        public async Task<ActionResult> Put(
+            [FromServices]ApplicationContext context,
+            [FromBody]MeioPagamento model,
+            int id
+        )
+        {
+            if (ModelState.IsValid)
+            {
+                model.Id = id;
+                context.Entry(model).State = EntityState.Modified;
 
+                try
+                {
+                    await context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await MeioPagamentoExistsAsync(id, context))
+                    {
+                        return NotFound();
+                    }
+                    else 
+                    {
+                        throw;
+                    }
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(model);
+        }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<ActionResult<MeioPagamento>> Delete(
+            [FromServices]ApplicationContext context,
+            int id)
+        {
+            var meioPagamento = await context.MeiosPagamento.FindAsync(id);
+            if (meioPagamento == null)
+            {
+                return NotFound();
+            }
+            context.MeiosPagamento.Remove(meioPagamento);
+            await context.SaveChangesAsync();
+
+            return meioPagamento;
+        }
     }
 }

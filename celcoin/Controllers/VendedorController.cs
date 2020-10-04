@@ -10,6 +10,8 @@ namespace celcoin.Controllers
     [Route("v1/vendedores")]
     public class VendedorController : ControllerBase
     {
+        private async Task<bool> VendedorExistsAsync(int id, ApplicationContext context) =>
+            await context.Vendedores.AnyAsync(e => e.Id == id);
 
         [HttpGet]
         [Route("")]
@@ -46,6 +48,59 @@ namespace celcoin.Controllers
             {
                 return BadRequest(ModelState);
             }
+        }
+
+        [HttpPut]
+        [Route("{id:int}")]
+        public async Task<ActionResult> Put(
+            [FromServices] ApplicationContext context,
+            [FromBody] Vendedor model,
+            int id
+        )
+        {
+            if (ModelState.IsValid)
+            {
+                model.Id = id;
+                context.Entry(model).State = EntityState.Modified;
+
+                try
+                {
+                    await context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await VendedorExistsAsync(id, context))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(model);
+        }
+        
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<ActionResult<Vendedor>> Delete(
+            [FromServices]ApplicationContext context,
+            int id)
+        {
+            var vendedor = await context.Vendedores.FindAsync(id);
+            if (vendedor == null)
+            {
+                return NotFound();
+            }
+            context.Vendedores.Remove(vendedor);
+            await context.SaveChangesAsync();
+
+            return vendedor;
         }
     }
 }

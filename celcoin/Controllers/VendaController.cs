@@ -3,8 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using celcoin.Data;
 using celcoin.Models;
+using celcoin.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using celcoin.Exceptions;
 
 namespace celcoin.Controllers
 {
@@ -12,6 +15,9 @@ namespace celcoin.Controllers
     [Route("v1/venda")]
     public class VendaController : ControllerBase
     {
+        private async Task<bool> VendaExistsAsync(int id, ApplicationContext context) =>
+            await context.Vendas.AnyAsync(e => e.Id == id);
+
         [HttpGet]
         [Route("")]
         public async Task<ActionResult<List<Venda>>> Get([FromServices] ApplicationContext context)
@@ -88,14 +94,112 @@ namespace celcoin.Controllers
         {
             if (ModelState.IsValid)
             {
-                context.Vendas.Add(model);
-                await context.SaveChangesAsync();
-                return model;
+                try
+                {
+                    var meioPagamento = await context.MeiosPagamento
+                        .Include(x => x.Taxa)
+                        .FirstOrDefaultAsync(x => x.Id == model.MeioPagamentoId);
+                    var taxaParcela = await context.Taxas
+                        .FirstOrDefaultAsync(x => x.Id == model.TaxaParcelaId);
+                    var tipoVenda = await context.TiposVenda
+                        .FirstOrDefaultAsync(x => x.Id == model.TipoVendaId);
+
+                    model.MeioPagamento = meioPagamento;
+                    model.TaxaParcela = taxaParcela;
+                    model.TipoVenda = tipoVenda;
+                    var vendaService = new VendaService(model);
+                    model.Recebivel = vendaService.CalcularRecebivel();
+                    context.Vendas.Add(model);
+                    var savedModel = await context.SaveChangesAsync();
+                    return model;
+                    
+                }
+                catch (PagamentoException exc)
+                {
+                    ModelState.AddModelError("Meio de Pagamento", exc.Message);
+                    return BadRequest(ModelState);
+                }
             }
             else
             {
                 return BadRequest(ModelState);
             }
         }
+
+        [HttpPut]
+        [Route("{id:int}")]
+        public async Task<ActionResult> Put(
+            [FromServices] ApplicationContext context,
+            [FromBody] Venda model,
+            int id
+        )
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var meioPagamento = await context.MeiosPagamento
+                        .Include(x => x.Taxa)
+                        .FirstOrDefaultAsync(x => x.Id == model.MeioPagamentoId);
+                    var taxaParcela = await context.Taxas
+                        .FirstOrDefaultAsync(x => x.Id == model.TaxaParcelaId);
+                    var tipoVenda = await context.TiposVenda
+                        .FirstOrDefaultAsync(x => x.Id == model.TipoVendaId);
+
+                    model.MeioPagamento = meioPagamento;
+                    model.TaxaParcela = taxaParcela;
+                    model.TipoVenda = tipoVenda;
+                    var vendaService = new VendaService(model);
+                    model.Recebivel = vendaService.CalcularRecebivel();
+
+                    model.Id = id;
+                    context.Entry(model).State = EntityState.Modified;
+                }
+                catch (PagamentoException exc)
+                {
+                    ModelState.AddModelError("Meio de Pagamento", exc.Message);
+                    return BadRequest(ModelState);
+                }
+
+                try
+                {
+                    await context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await VendaExistsAsync(id, context))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(model);
+        }
+        
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<ActionResult<Venda>> Delete(
+            [FromServices]ApplicationContext context,
+            int id)
+        {
+            var venda = await context.Vendas.FindAsync(id);
+            if (venda == null)
+            {
+                return NotFound();
+            }
+            context.Vendas.Remove(venda);
+            await context.SaveChangesAsync();
+
+            return venda;
+        }
+
     }
 }

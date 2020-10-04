@@ -10,7 +10,7 @@ using celcoin.Data;
 namespace celcoin.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20201001230725_initial")]
+    [Migration("20201003192057_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,7 +19,8 @@ namespace celcoin.Migrations
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.1.8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63)
+                .HasAnnotation("Relational:Sequence:.Id", "'Id', '', '1000', '1', '', '', 'Int32', 'False'");
 
             modelBuilder.Entity("celcoin.Models.MeioPagamento", b =>
                 {
@@ -45,15 +46,15 @@ namespace celcoin.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = 1000,
                             Nome = "Débito",
-                            TaxaId = 3
+                            TaxaId = 1000
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 1001,
                             Nome = "Crédito",
-                            TaxaId = 4
+                            TaxaId = 1001
                         });
                 });
 
@@ -79,25 +80,25 @@ namespace celcoin.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = 1000,
                             Nome = "taxa_debito",
                             Valor = 2.3m
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 1001,
                             Nome = "taxa_credito",
                             Valor = 4.55m
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 1002,
                             Nome = "taxa_parcela_credito",
                             Valor = 1.6m
                         },
                         new
                         {
-                            Id = 4,
+                            Id = 1003,
                             Nome = "taxa_parcela_debito",
                             Valor = 0m
                         });
@@ -122,17 +123,17 @@ namespace celcoin.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = 1000,
                             Nome = "CUSTO_VENDEDOR"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 1001,
                             Nome = "PARCELADO_CLIENTE"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 1002,
                             Nome = "CUSTO_CLIENTE"
                         });
                 });
@@ -162,6 +163,9 @@ namespace celcoin.Migrations
                     b.Property<int>("TipoVendaId")
                         .HasColumnType("integer");
 
+                    b.Property<decimal>("ValorVenda")
+                        .HasColumnType("numeric");
+
                     b.Property<int>("VendedorId")
                         .HasColumnType("integer");
 
@@ -180,25 +184,39 @@ namespace celcoin.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = 1000,
                             Data = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MeioPagamentoId = 1,
+                            MeioPagamentoId = 1000,
                             NumParcelas = 1,
-                            Recebivel = 100m,
-                            TaxaParcelaId = 1,
-                            TipoVendaId = 1,
-                            VendedorId = 1
+                            Recebivel = 102.3m,
+                            TaxaParcelaId = 1000,
+                            TipoVendaId = 1000,
+                            ValorVenda = 100m,
+                            VendedorId = 1000
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 1001,
                             Data = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MeioPagamentoId = 2,
+                            MeioPagamentoId = 1001,
+                            NumParcelas = 3,
+                            Recebivel = 101.67m,
+                            TaxaParcelaId = 1002,
+                            TipoVendaId = 1001,
+                            ValorVenda = 100m,
+                            VendedorId = 1000
+                        },
+                        new
+                        {
+                            Id = 1002,
+                            Data = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MeioPagamentoId = 1001,
                             NumParcelas = 4,
-                            Recebivel = 100m,
-                            TaxaParcelaId = 3,
-                            TipoVendaId = 2,
-                            VendedorId = 1
+                            Recebivel = 106.22m,
+                            TaxaParcelaId = 1002,
+                            TipoVendaId = 1002,
+                            ValorVenda = 100m,
+                            VendedorId = 1000
                         });
                 });
 
@@ -224,7 +242,7 @@ namespace celcoin.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = 1000,
                             Nome = "Marcos Vinícios de Oliveira",
                             Saldo = 0.0
                         });

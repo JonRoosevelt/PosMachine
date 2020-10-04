@@ -11,6 +11,9 @@ namespace celcoin.Controllers
     [Route("v1/taxas")]
     public class TaxaController : ControllerBase
     {
+        private async Task<bool> TaxaExistsAsync(int id, ApplicationContext context) =>
+            await context.Taxas.AnyAsync(e => e.Id == id);
+
         [HttpGet]
         [Route("")]
         public async Task<ActionResult<List<Taxa>>> Get([FromServices] ApplicationContext context)
@@ -50,6 +53,57 @@ namespace celcoin.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("{id:int}")]
+        public async Task<ActionResult> Put(
+            [FromServices] ApplicationContext context,
+            [FromBody] Taxa model,
+            int id
+        )
+        {
+            if (ModelState.IsValid)
+            {
+                model.Id = id;
+                context.Entry(model).State = EntityState.Modified;
 
+                try
+                {
+                    await context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await TaxaExistsAsync(id, context))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(model);
+        }
+        
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<ActionResult<Taxa>> Delete(
+            [FromServices]ApplicationContext context,
+            int id)
+        {
+            var taxa = await context.Taxas.FindAsync(id);
+            if (taxa == null)
+            {
+                return NotFound();
+            }
+            context.Taxas.Remove(taxa);
+            await context.SaveChangesAsync();
+
+            return taxa;
+        }
     }
 }

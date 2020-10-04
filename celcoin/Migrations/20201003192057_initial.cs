@@ -8,6 +8,10 @@ namespace celcoin.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateSequence<int>(
+                name: "Id",
+                startValue: 1000L);
+
             migrationBuilder.CreateTable(
                 name: "Taxas",
                 columns: table => new
@@ -81,6 +85,7 @@ namespace celcoin.Migrations
                     TaxaParcelaId = table.Column<int>(nullable: false),
                     NumParcelas = table.Column<int>(nullable: false),
                     Recebivel = table.Column<decimal>(nullable: false),
+                    ValorVenda = table.Column<decimal>(nullable: false),
                     Data = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -117,10 +122,10 @@ namespace celcoin.Migrations
                 columns: new[] { "Id", "Nome", "Valor" },
                 values: new object[,]
                 {
-                    { 1, "taxa_debito", 2.3m },
-                    { 2, "taxa_credito", 4.55m },
-                    { 3, "taxa_parcela_credito", 1.6m },
-                    { 4, "taxa_parcela_debito", 0m }
+                    { 1000, "taxa_debito", 2.3m },
+                    { 1001, "taxa_credito", 4.55m },
+                    { 1002, "taxa_parcela_credito", 1.6m },
+                    { 1003, "taxa_parcela_debito", 0m }
                 });
 
             migrationBuilder.InsertData(
@@ -128,32 +133,33 @@ namespace celcoin.Migrations
                 columns: new[] { "Id", "Nome" },
                 values: new object[,]
                 {
-                    { 1, "CUSTO_VENDEDOR" },
-                    { 2, "PARCELADO_CLIENTE" },
-                    { 3, "CUSTO_CLIENTE" }
+                    { 1000, "CUSTO_VENDEDOR" },
+                    { 1001, "PARCELADO_CLIENTE" },
+                    { 1002, "CUSTO_CLIENTE" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Vendedores",
                 columns: new[] { "Id", "Nome", "Saldo" },
-                values: new object[] { 1, "Marcos Vinícios de Oliveira", 0.0 });
+                values: new object[] { 1000, "Marcos Vinícios de Oliveira", 0.0 });
 
             migrationBuilder.InsertData(
                 table: "MeiosPagamento",
                 columns: new[] { "Id", "Nome", "TaxaId" },
                 values: new object[,]
                 {
-                    { 1, "Débito", 3 },
-                    { 2, "Crédito", 4 }
+                    { 1000, "Débito", 1000 },
+                    { 1001, "Crédito", 1001 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Vendas",
-                columns: new[] { "Id", "Data", "MeioPagamentoId", "NumParcelas", "Recebivel", "TaxaParcelaId", "TipoVendaId", "VendedorId" },
+                columns: new[] { "Id", "Data", "MeioPagamentoId", "NumParcelas", "Recebivel", "TaxaParcelaId", "TipoVendaId", "ValorVenda", "VendedorId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 1, 100m, 1, 1, 1 },
-                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 4, 100m, 3, 2, 1 }
+                    { 1000, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1000, 1, 102.3m, 1000, 1000, 100m, 1000 },
+                    { 1001, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1001, 3, 101.67m, 1002, 1001, 100m, 1000 },
+                    { 1002, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1001, 4, 106.22m, 1002, 1002, 100m, 1000 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -198,6 +204,9 @@ namespace celcoin.Migrations
 
             migrationBuilder.DropTable(
                 name: "Taxas");
+
+            migrationBuilder.DropSequence(
+                name: "Id");
         }
     }
 }

@@ -59,7 +59,7 @@ Para visualizar a api, pode ser utilizada uma aplicação como insomnia, postman
 
 
 Caso opte por rodar diretamente no insomnia, segue o link.
-[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=Celcoin&uri=https%3A%2F%2Fgithub.com%2FJonRoosevelt%2Fcelcoin%2Fblob%2Fmain%2Fcelcoin.json)
+[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=Celcoin&uri=https://raw.githubusercontent.com/JonRoosevelt/celcoin/main/celcoin.json)
 
 
 

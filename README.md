@@ -65,6 +65,6 @@ Caso opte por rodar diretamente no insomnia, segue o link.
 
 
 Para acessar a aplicação é só ir ao endereço:
-[https://localhost:5001/maquineta](/646XFMZbQDKLqKIRQ4VyTg)
+[https://localhost:5001/](/646XFMZbQDKLqKIRQ4VyTg)
 
 Quaisquer dúvidas, só entrar em contato.

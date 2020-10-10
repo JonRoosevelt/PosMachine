@@ -3,15 +3,54 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import { useMeioPagamento } from "../context/MeioPagamento";
-import Axios from "axios";
+import { useSimulacao } from "../context/Simulacao";
+import axios from "axios";
+import { API_HOST } from '../consts';
 
 const InformacoesCardForm = ({ taxas }) => {
   const { meioPagamento } = useMeioPagamento();
-  const [meioPagamentoId, setMeioPagamentoId] = useState();
-  const [taxaParcelaId, setTaxaParcelaId] = useState();
-  const [taxaParcela, setTaxaParcela] = useState();
-  const [listaDeTaxas, setListaDeTaxas] = useState(taxas);
+  const { simulacao, setSimulacao } = useSimulacao();
+  const [meioPagamentoId, setMeioPagamentoId] = useState(1000);
+
+  const [taxaParcela, setTaxaParcela] = useState({
+    id: 1003,
+    nome: "taxa_parcela_debito",
+    valor: 0.0,
+  });
+
   const numParcelas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+  const fetchSimulacao = async (venda) => {
+    await axios
+      .post(`${API_HOST}/v1/simular`, { data: venda })
+      .then((response) => setSimulacao(response.data))
+      .catch(err => alert(err))
+  };
+
+
+  const updateSimulacao = (formInfo) => {
+    const {
+      formParcelas,
+      formTaxaIntermediacao,
+      formVenda,
+      formTaxaParcelamento,
+    } = formInfo;
+
+    const venda = ({
+      vendedorId: 1000,
+      meioPagamentoId: meioPagamentoId || 1000,
+      tipoVendaId: 1000,
+      numParcelas: formParcelas.value,
+      taxaIntermediacao: formTaxaIntermediacao.value,
+      valorVenda: formVenda.value,
+      taxaParcela: taxaParcela.id,
+      valorTaxa: formTaxaParcelamento.value,
+    });
+
+    fetchSimulacao(venda)
+
+    console.log(simulacao)
+  };
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -19,44 +58,25 @@ const InformacoesCardForm = ({ taxas }) => {
       event.preventDefault();
       event.stopPropagation();
     }
-    const {
-      formParcelas,
-      formTaxaIntermediacao,
-      formVenda,
-      formTaxaParcelamento,
-    } = form.elements;
-    const venda = {
-      meioPagamentoId,
-      numParcelas: formParcelas.value,
-      taxaIntermediacao: formTaxaIntermediacao.value,
-      valorVenda: formVenda.value,
-      taxaParcelaId,
-      valorTaxa: formTaxaParcelamento.value,
-    };
-    alert(venda);
+
+    const formInfo = form.elements;
+
+    updateSimulacao(formInfo);
   };
 
-  const setTaxaParcelaIdAndValue = (meioPagamento) => {
-    let taxaId = 0;
-    if (meioPagamento.nome === "Débito") {
-      taxaId = 1003;
-    } else {
+  const updateTaxaParcelaId = (meioPagamentoId) => {
+    let taxaId = 1003;
+    if (meioPagamentoId === 1001) {
       taxaId = 1002;
     }
-    setTaxaParcelaId(taxaId);
-    if (listaDeTaxas > 0) {
-      setTaxaParcela(listaDeTaxas.filter((taxa) => taxa.id == taxaId));
-    }
+    const taxa = taxas.find((taxa) => taxa.id === taxaId);
+    setTaxaParcela(taxa);
   };
 
   useEffect(() => {
     setMeioPagamentoId(meioPagamento.id);
-    setTaxaParcelaIdAndValue(meioPagamento);
+    updateTaxaParcelaId(meioPagamento.id);
   }, [meioPagamento]);
-
-  useEffect(() => {
-    setListaDeTaxas(taxas);
-  }, [taxas]);
 
   return (
     <div style={{ margin: "50px 30px" }}>
@@ -77,7 +97,7 @@ const InformacoesCardForm = ({ taxas }) => {
               <Form.Control
                 type="number"
                 placeholder="0,00%"
-                value={taxaParcela}
+                value={taxaParcela ? taxaParcela.valor : 0.0}
               />
             </Form.Group>
           </Form.Row>

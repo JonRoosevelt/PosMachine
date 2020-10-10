@@ -2,9 +2,11 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { API_HOST } from "../consts";
 import MeioPagamentoProvider from "../context/MeioPagamento";
+import SimulacaoProvider from "../context/Simulacao";
 import InformacoesCardForm from "./InformacoesCardForm";
 import InformacoesRecebimento from "./InformacoesRecebimento";
 import MeioDePagamentoSelect from "./MeioDePagamentoSelect";
+
 
 const Maquineta = () => {
   const [meiosPagamento, setMeiosPagamento] = useState([]);
@@ -48,8 +50,10 @@ const Maquineta = () => {
           gridTemplateColumns: "1fr 1fr",
         }}
       >
-        <InformacoesCardForm taxas={taxas} />
-        <InformacoesRecebimento />
+        <SimulacaoProvider>
+          <InformacoesCardForm taxas={taxas} />
+          <InformacoesRecebimento />
+        </SimulacaoProvider>
       </div>
     </MeioPagamentoProvider>
   );

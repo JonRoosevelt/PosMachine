@@ -1,6 +1,10 @@
 import React from "react";
+import { useSimulacao } from "../context/Simulacao";
+
 
 const InformacoesRecebimento = () => {
+  const { simulacao } = useSimulacao();
+  console.log(simulacao);
   return (
     <>
       <div style={{ margin: "50px 30px" }}>

@@ -76,7 +76,7 @@ const InformacoesCardForm = ({ taxas }) => {
     const taxaParcelaId = await getOrCreateTaxaParcela(values);
 
     const { valorVenda, numParcelas, taxaParcelamento } = values;
-    const {   id   } = meioPagamento;
+    const { id } = meioPagamento;
     const venda = {
       taxaIntermediacao,
       valorTaxa: taxaParcelamento,
@@ -105,7 +105,10 @@ const InformacoesCardForm = ({ taxas }) => {
   }, [meioPagamento, taxaParcela]);
 
   return (
-    <div className="container" style={{ marginTop: "50px", marginBottom: "50px" }}>
+    <div
+      className="container"
+      style={{ marginTop: "50px", marginBottom: "50px" }}
+    >
       <div className="row justify-content-center">
         <h5>Informações de Cobrança</h5>
         <div className="col-lg-8">
@@ -118,7 +121,10 @@ const InformacoesCardForm = ({ taxas }) => {
             onSubmit={(values) => handleSubmit(values)}
           >
             <Form>
-              <div className="row justify-content-md-center">
+              <div
+                className="row justify-content-md-center"
+                style={{ marginTop: "10px" }}
+              >
                 <div className="col">
                   <label>Taxa de Intermediação</label>
                   <Field
@@ -166,6 +172,7 @@ const InformacoesCardForm = ({ taxas }) => {
               <button
                 type="submit"
                 className="btn btn-secondary btn-block"
+                style={{ marginTop: "30px" }}
               >
                 Simular
               </button>

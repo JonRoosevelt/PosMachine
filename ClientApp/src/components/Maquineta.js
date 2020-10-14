@@ -6,17 +6,20 @@ import SimulacaoProvider, { useSimulacao } from "../context/Simulacao";
 import InformacoesCardForm from "./InformacoesCardForm";
 import InformacoesRecebimento from "./InformacoesRecebimento";
 import MeioDePagamentoSelect from "./MeioDePagamentoSelect";
+import SkeletonComponent from "./SkeletonComponent";
 
 const Maquineta = () => {
   const [meiosPagamento, setMeiosPagamento] = useState([]);
   const [taxas, setTaxas] = useState([]);
   const { simulacao } = useSimulacao();
   const [showSimulacao, setShowSimulacao] = useState(false);
+  const [fetchingMeiosPagamento, setFetchingMeiosPagamento] = useState(true);
 
   const fetchMeiosPagamento = async () => {
     await axios
       .get(`${API_HOST}/v1/meios-de-pagamento`)
-      .then((response) => setMeiosPagamento(response.data));
+      .then((response) => setMeiosPagamento(response.data))
+      .then(setFetchingMeiosPagamento(false));
   };
 
   const fetchTaxas = async () => {
@@ -51,7 +54,11 @@ const Maquineta = () => {
           gridTemplateColumns: "1fr 1fr",
         }}
       >
-        <MeioDePagamentoSelect meiosDePagamento={meiosPagamento} />
+        {fetchingMeiosPagamento ? (
+          <SkeletonComponent duration={5} height={250} width={1200} />
+        ) : (
+          <MeioDePagamentoSelect meiosDePagamento={meiosPagamento} />
+        )}
       </div>
 
       <div
@@ -60,9 +67,17 @@ const Maquineta = () => {
           gridTemplateColumns: "1fr 1fr",
         }}
       >
-        <InformacoesCardForm taxas={taxas} />
-        <InformacoesRecebimento />
-        {/* {showSimulacao && <InformacoesRecebimento />} */}
+        {fetchingMeiosPagamento ? (
+          <>
+            <SkeletonComponent duration={5} height={450} width={250} />
+            <SkeletonComponent duration={5} height={450} width={250} />
+          </>
+        ) : (
+          <>
+            <InformacoesCardForm taxas={taxas} />
+            <InformacoesRecebimento />
+          </>
+        )}
       </div>
     </MeioPagamentoProvider>
   );

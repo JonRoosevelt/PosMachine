@@ -1174,11 +1174,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/jon/dev/projects/PosMachine/PosMachine.App/PosMachine.csproj",
+      "projectUniqueName": "/home/jon/dev/projects/PosMachine/PosMachine.App/PosMachine.App/PosMachine.csproj",
       "projectName": "PosMachine",
-      "projectPath": "/home/jon/dev/projects/PosMachine/PosMachine.App/PosMachine.csproj",
+      "projectPath": "/home/jon/dev/projects/PosMachine/PosMachine.App/PosMachine.App/PosMachine.csproj",
       "packagesPath": "/home/jon/.nuget/packages/",
-      "outputPath": "/home/jon/dev/projects/PosMachine/PosMachine.App/obj/",
+      "outputPath": "/home/jon/dev/projects/PosMachine/PosMachine.App/PosMachine.App/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/share/dotnet/sdk/NuGetFallbackFolder"

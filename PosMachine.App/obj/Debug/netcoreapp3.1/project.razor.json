@@ -1,5 +1,5 @@
 {
-  "FilePath": "/home/jon/dev/projects/PosMachine/PosMachine.App/PosMachine.csproj",
+  "FilePath": "/home/jon/dev/projects/PosMachine/PosMachine.App/PosMachine.App/PosMachine.csproj",
   "Configuration": {
     "ConfigurationName": "MVC-3.0",
     "LanguageVersion": "3.0",
@@ -14447,12 +14447,12 @@
   "RootNamespace": "PosMachine",
   "Documents": [
     {
-      "FilePath": "/home/jon/dev/projects/PosMachine/PosMachine.App/Pages/_ViewImports.cshtml",
+      "FilePath": "/home/jon/dev/projects/PosMachine/PosMachine.App/PosMachine.App/Pages/_ViewImports.cshtml",
       "TargetPath": "Pages\\_ViewImports.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "/home/jon/dev/projects/PosMachine/PosMachine.App/Pages/Error.cshtml",
+      "FilePath": "/home/jon/dev/projects/PosMachine/PosMachine.App/PosMachine.App/Pages/Error.cshtml",
       "TargetPath": "Pages\\Error.cshtml",
       "FileKind": "mvc"
     }

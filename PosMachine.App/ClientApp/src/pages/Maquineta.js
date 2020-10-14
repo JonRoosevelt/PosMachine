@@ -3,10 +3,10 @@ import React, { useState, useEffect } from "react";
 import { API_HOST } from "../consts";
 import MeioPagamentoProvider from "../context/MeioPagamento";
 import SimulacaoProvider, { useSimulacao } from "../context/Simulacao";
-import InformacoesCardForm from "./InformacoesCardForm";
-import InformacoesRecebimento from "./InformacoesRecebimento";
-import MeioDePagamentoSelect from "./MeioDePagamentoSelect";
-import SkeletonComponent from "./SkeletonComponent";
+import InformacoesCardForm from "../components/InformacoesCardForm";
+import InformacoesRecebimento from "../components/InformacoesRecebimento";
+import MeioDePagamentoSelect from "../components/MeioDePagamentoSelect";
+import SkeletonComponent from "../components/SkeletonComponent";
 
 const Maquineta = () => {
   const [meiosPagamento, setMeiosPagamento] = useState([]);
@@ -18,8 +18,8 @@ const Maquineta = () => {
   const fetchMeiosPagamento = async () => {
     await axios
       .get(`${API_HOST}/v1/meios-de-pagamento`)
-      .then((response) => setMeiosPagamento(response.data))
-      .then(setFetchingMeiosPagamento(false));
+      .then((response) => setMeiosPagamento(response.data));
+    setFetchingMeiosPagamento(false);
   };
 
   const fetchTaxas = async () => {

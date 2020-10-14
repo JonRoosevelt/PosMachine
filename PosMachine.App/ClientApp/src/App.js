@@ -3,7 +3,7 @@ import { Route } from "react-router";
 import { Layout } from "./components/Layout";
 
 import "./custom.css";
-import Maquineta from "./components/Maquineta";
+import Maquineta from "./pages/Maquineta";
 import SimulacaoProvider from "./context/Simulacao";
 
 export default class App extends Component {
